@@ -16,7 +16,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class RegisterPatientView(generics.CreateAPIView):
     queryset = Patient.objects.all()
-    permission_classes = [AllowAny, IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
 
     def perform_create(self, serializer):

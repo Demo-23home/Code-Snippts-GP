@@ -18,15 +18,33 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+    email = serializers.EmailField()
+    role = serializers.CharField(read_only=True, default=User.Role.PATIENT)
+
 
     class Meta:
         model = User
-        fields = ["username", "password", "role"]
+        fields = ["username", "email", "password", "confirm_password", "role"]
+
+    def validate(self, attrs):
+        if attrs["password"] != attrs["confirm_password"]:
+            raise serializers.ValidationError("Passwords do not match.")
+        return attrs
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data["username"],
-            password=validated_data["password"],
-            role=validated_data["role"],
-        )
+        validated_data.pop("confirm_password")
+        user = User.objects.create_user(**validated_data)
         return user
+
+
+class DoctorProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DoctorProfile
+        fields = "__all__"
+
+
+class PatientProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientProfile
+        fields = "__all__"
