@@ -4,6 +4,7 @@ from .views import (
     RegisterPatientView,
     RegisterDoctorView,
     dahsBoard,
+    get_doctor_profile
 )
 
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
     path("register/patient/", RegisterPatientView.as_view(), name="register_patient"),
     path("register/doctor/", RegisterDoctorView.as_view(), name="register_doctor"),
     path("dashboard/", dahsBoard),
+    path("doctor_info/<int:pk>", get_doctor_profile ),
 ]
